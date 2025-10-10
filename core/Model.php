@@ -1,0 +1,71 @@
+<?php
+
+namespace Core;
+
+class Model
+{
+    protected static string $table_name;
+    public ?int $id;
+
+    public function __construct()
+    {
+        // if (empty(static::$table_name)) {
+        //     static::$table_name = strtolower(basename(get_class($this))) . 's';
+        // }
+    }
+
+    protected static function get_table_name(): string
+    {
+        if (empty(static::$table_name)) {
+            // var_dump(get_called_class());
+            static::$table_name = strtolower(basename(get_called_class())) . 's';
+        }
+        return static::$table_name;
+    }
+
+    public function save(): void
+    {
+        // Get all properties from child class
+        $data = get_object_vars($this);
+        // Filter class properties that are objects
+        $data = array_filter($data, fn($val) => !is_object($val));
+
+        // Update if id is set or Insert
+        if (isset($this->id)) {
+            $set = array_map(
+                fn($d) => "$d = ?",
+                array_keys($data)
+            );
+            $set = implode(', ', $set);
+            $sql = "UPDATE " . static::get_table_name() . " SET $set WHERE id = ?";
+            $stmt = Database::pdo()->prepare($sql);
+            $stmt->execute([...array_values($data), $this->id]);
+        } else {
+            $columns = implode(', ', array_keys($data));
+            $placeholders = implode(', ', array_fill(0, count($data), '?'));
+            $sql = "INSERT INTO " . static::get_table_name() . "($columns) VALUES ($placeholders)";
+            $stmt = Database::pdo()->prepare($sql);
+            $stmt->execute(array_values($data));
+            $this->id = (int) Database::pdo()->lastInsertId();
+        }
+    }
+
+    public function delete(): bool
+    {
+        if (!isset($this->id)) {
+            return false;
+        }
+        return Database::pdo()
+            ->prepare("DELETE FROM " . static::get_table_name() . " WHERE id = ?")
+            ->execute([$this->id]);
+    }
+
+    public static function find_by_id(int $id): static | false
+    {
+        $sql = "SELECT * FROM " . static::get_table_name() . " WHERE id = ?";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->execute([$id]);
+        $stmt->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        return $stmt->fetch();
+    }
+}
