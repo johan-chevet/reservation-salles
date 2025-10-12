@@ -20,7 +20,7 @@ class Request
         $uri = trim(parse_url($uri, PHP_URL_PATH), '/');
 
         //Remove extra part of the url if server doesn't point to /public
-        $base_url = parse_url(BASE_URL, PHP_URL_PATH);
+        $base_url = parse_url(BASE_URL, PHP_URL_PATH) ?? '';
         $base_url = trim($base_url, '/');
 
         if ($base_url) {

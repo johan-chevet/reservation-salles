@@ -18,57 +18,53 @@ class ReservationController extends Controller
     public function show_planning()
     {
 
-        $days_offset = [
-            'Mon' => 0,
-            'Tue' => 1,
-            'Wed' => 2,
-            'Thu' => 3,
-            'Fri' => 4,
-            'Sat' => 5,
-            'Sun' => 6,
-        ];
-
-        $slot_start = 8;
-        $slot_end = 19;
+        $days_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        $start_hour = 8;
+        $end_hour = 19;
         $slots = [];
 
-        for ($i = $slot_start; $i < $slot_end; $i++) {
-            $slots[] = "$i - " . $i + 1;
+        for ($hour = $start_hour; $hour < $end_hour; $hour++) {
+            $slots[$hour] = "$hour - " . $hour + 1 . "h";
         }
-        $date = new DateTime();
-        $offset = $days_offset[$date->format('D')];
-        $monday = $date->sub(DateInterval::createFromDateString("$offset days"));
-        $days = [$monday];
 
-        foreach ($days_offset as $day => $index) {
-            if ($day !== 'Mon') {
-                $date = new DateTime($monday->format("Y-m-d"));
-                $date->add(DateInterval::createFromDateString("$index days"));
-                $days[] = $date;
+        $today = new DateTime();
+        $today_day = $today->format('N');
+        $monday = $today->modify("-" . ($today_day - 1) . " days");
+
+        foreach ($days_order as $i => $day) {
+            $days[$day] = (clone $monday)->modify("+ $i days");
+        }
+
+        $planning = [];
+        foreach ($days_order as $day) {
+            foreach (array_keys($slots) as $slot) {
+                $planning[$day][$slot] = null;
             }
         }
-        // $tuesday = new DateTime($date)->sub()
-        // $monday = $date->sub(new DateInterval('P2D'));
-        // $monday = $monday->sub(DateInterval::createFromDateString("$offset days"));
-
-        // var_dump($date->format("l d, M Y"));
-        // var_dump($offset);
-        // var_dump($days);
+        echo '<pre>';
+        var_dump($planning);
+        echo '</pre>';
         $reservations = Reservation::get_week_reservation();
-        var_dump(value: $reservations);
-        $reservations_array = [];
-        foreach ($reservations as  $reservation) {
-            $start = new DateTime($reservation->start);
-            $day = $start->format('D');
-            $hour = $start->format('h');
-            var_dump($day);
-            var_dump($hour);
-            $reservations_array[$day][(string)$hour] = $reservation;
+        foreach ($reservations as $reservation) {
+            $start_date = new DateTime($reservation->start);
+            $end_date = new DateTime($reservation->end);
+            $start_hour = $start_date->format('G');
+            $end_hour = $end_date->format('G');
+            $day = $start_date->format('D');
 
-            // $reservation_array
+            for ($hour = $start_hour; $hour < $end_hour; $hour++) {
+                $planning[$day][$hour] = $reservation;
+            }
         }
-        var_dump($reservations_array['Sat'][12]);
-        $this->render_with_layout('reservation/planning', ['days' => $days, 'slots' => $slots, 'reservations' => $reservations_array]);
+        echo '<pre>';
+        var_dump($planning);
+        echo '</pre>';
+
+        $this->render_with_layout('reservation/planning', [
+            'days' => $days,
+            'slots' => $slots,
+            'planning' => $planning
+        ]);
     }
 
     public function reserve(Request $request)

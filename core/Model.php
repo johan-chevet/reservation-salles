@@ -17,8 +17,8 @@ class Model
     protected static function get_table_name(): string
     {
         if (empty(static::$table_name)) {
-            // var_dump(get_called_class());
-            static::$table_name = strtolower(basename(get_called_class())) . 's';
+            $class_name = str_replace('\\', '/', get_called_class());
+            static::$table_name = strtolower(basename($class_name)) . 's';
         }
         return static::$table_name;
     }
@@ -60,7 +60,7 @@ class Model
             ->execute([$this->id]);
     }
 
-    public static function find_by_id(int $id): static | false
+    public static function find_by_id(int $id): static|false
     {
         $sql = "SELECT * FROM " . static::get_table_name() . " WHERE id = ?";
         $stmt = Database::pdo()->prepare($sql);

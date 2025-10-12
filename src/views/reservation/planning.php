@@ -2,27 +2,24 @@
     <thead>
         <tr>
             <th></th>
-            <?php foreach ($days as $day): ?>
+            <?php foreach ($days as $key => $day): ?>
                 <th><?= $day->format('l d M Y') ?></th>
             <?php endforeach; ?>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($slots as $slot): ?>
+        <?php foreach ($slots as $hour => $label): ?>
             <tr>
-                <th><?= $slot . 'h' ?></th>
-                <?php foreach ($days as $day): ?>
-                    <td>
-                        <?php
-                        // var_dump(substr($slot, 0, 1));
-                        // var_dump($day);
-                        //TODO fix
-                        if (isset($reservations[$day->format('D')][(int)substr($slot, 0, 1)])) {
-                            echo 'yyyyyyyyyyay';
-                            var_dump($day);
-                        }
-                        ?>
-                    </td>
+                <th><?= $label ?></th>
+                <?php foreach ($days as $key => $day): ?>
+                    <?php $reservation = $planning[$key][$hour]; ?>
+                    <?php if ($reservation): ?>
+                        <td class="reserved">
+                            <div><?= htmlspecialchars($reservation->title) ?></div>
+                        </td>
+                    <?php else: ?>
+                        <td></td>
+                    <?php endif ?>
                 <?php endforeach; ?>
             </tr>
         <?php endforeach; ?>

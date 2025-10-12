@@ -27,6 +27,7 @@ table tbody {
 
 th,
 td {
+  border: 3px solid black;
   padding: 1rem;
   /* background-color: rgba(76, 81, 147, 0.607); */
 }
@@ -128,4 +129,12 @@ table tbody tr:nth-child(even) {
   color: red;
   font-size: 1rem;
   font-style: italic;
+}
+
+
+/* Plannning */
+.reserved {
+  background-color: aqua;
+  /* width: 100%; */
+  /* height: 100%; */
 }

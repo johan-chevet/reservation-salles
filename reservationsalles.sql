@@ -9,8 +9,21 @@ use reservationsalles;
 
 -- --------------------------------------------------------
 
+
 --
--- Structure de la table `comments`
+-- Structure de la table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `login` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+);
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `reservations`
 --
 
 DROP TABLE IF EXISTS `reservations`;
@@ -22,19 +35,6 @@ CREATE TABLE IF NOT EXISTS `reservations` (
   `end` DATETIME NOT NULL,
   `user_id` int NOT NULL,
   FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
--- --------------------------------------------------------
-
---
--- Structure de la table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `login` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL
 );
 
 COMMIT;

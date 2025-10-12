@@ -16,6 +16,10 @@ use Core\SessionManager;
 
 // TODO CSRF
 SessionManager::start();
+// Activer l'affichage des erreurs en développement
+// À désactiver en production
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 $request = new Request();
 

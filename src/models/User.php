@@ -19,7 +19,7 @@ class User extends Model
     public string $login;
     public string $password;
 
-    public static function find_by_login(string $login): User | false
+    public static function find_by_login(string $login): User|false
     {
         $sql = "SELECT * FROM " . static::get_table_name() . " WHERE login = ?";
         $stmt = Database::pdo()->prepare($sql);
