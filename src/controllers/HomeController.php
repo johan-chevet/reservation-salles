@@ -3,16 +3,17 @@
 namespace Src\Controllers;
 
 use Core\Controller;
+use Core\Http\Request;
 
 class HomeController extends Controller
 {
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
+        parent::__construct($request);
     }
 
     public function index()
     {
-        $this->render_with_layout('home/index');
+        return $this->render_with_layout('home/index');
     }
 }

@@ -27,13 +27,17 @@ class Reservation extends Model
     public static function get_week_reservation()
     {
         //TODO get start date of current week
+        $days = ReservationUtils::get_week_dates();
+        $monday = $days['Mon']->format(ReservationUtils::DATE_FORMAT);
+        $sunday = $days['Sun']->format(ReservationUtils::DATE_FORMAT);
         $sql = "
             SELECT r.*, u.login 
             FROM reservations AS r 
             JOIN users AS u ON r.user_id = u.id
+            WHERE start >= ? AND end <= ?
         ";
         $stmt = Database::pdo()->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$monday, $sunday]);
         $reservation_array = $stmt->fetchAll();
         $reservations = [];
 

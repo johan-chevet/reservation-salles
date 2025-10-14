@@ -2,6 +2,7 @@
 require '../core/Autoloader.php';
 
 use Core\Autoloader;
+use Core\Http\Response;
 
 Autoloader::register();
 
@@ -11,7 +12,7 @@ require '../config/database.php';
 require '../core/utilities/utilities.php';
 
 use Core\Router;
-use Core\Request;
+use Core\Http\Request;
 use Core\SessionManager;
 
 // TODO CSRF
@@ -24,4 +25,7 @@ ini_set('display_errors', 1);
 $request = new Request();
 
 $router = new Router($request);
-$router->dispatch();
+
+$response = $router->dispatch();
+
+$response->send();

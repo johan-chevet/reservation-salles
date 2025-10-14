@@ -2,6 +2,9 @@
 
 namespace Core;
 
+use Core\Http\Request;
+use Core\Http\Response;
+
 class Router
 {
 
@@ -68,21 +71,27 @@ class Router
 
         // No match found
         if ($route === null) {
-            // TODO clean
-            http_response_code(404);
-            include VIEW_PATH . "/errors/404.php";
-            exit;
+            $response = new Response();
+            return $response->body(load_view('errors/404'))->set_status(404);
         }
 
-        if (!empty($route['middlewares'])) {
-            $middlewares = $route['middlewares'];
-            foreach ($middlewares as $middleware) {
-                $middleware($this->request);
-            }
-        }
-        $controller = new $route['controller'];
+        // Instanciate controller
+        $controller = new $route['controller']($this->request);
         $method = $route['method'];
-        $params = [$this->request, ...$params];
-        call_user_func_array([$controller, $method], $params);
+
+        $controller_function = function ($request) use ($controller, $method, $params) {
+            return call_user_func_array([$controller, $method], $params);
+        };
+
+        $middlewares = array_reverse($route['middleware'] ?? []);
+        $next = $controller_function;
+
+        foreach ($middlewares as $middleware) {
+            $next = function ($request) use ($middleware, $next) {
+                return $middleware($request, $next);
+            };
+        }
+
+        return $next($this->request);
     }
 }

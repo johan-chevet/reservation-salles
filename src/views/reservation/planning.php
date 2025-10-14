@@ -15,7 +15,8 @@
                     <?php $reservation = $planning[$key][$hour]; ?>
                     <?php if ($reservation): ?>
                         <td class="reserved">
-                            <div><?= htmlspecialchars($reservation->title) ?></div>
+                            <div class="slot-user"><?= htmlspecialchars($reservation->user->login) ?></div>
+                            <div class="slot-title"><?= htmlspecialchars($reservation->title) ?></div>
                         </td>
                     <?php else: ?>
                         <td></td>

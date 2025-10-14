@@ -3,9 +3,8 @@
 namespace Src\Controllers;
 
 use Core\Controller;
-use Core\Request;
+use Core\Http\Request;
 use Core\SessionManager;
-use DateInterval;
 use DateTime;
 use Src\Models\Reservation;
 use Src\Utils\ReservationUtils;
@@ -13,15 +12,15 @@ use Src\Utils\ReservationUtils;
 class ReservationController extends Controller
 {
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        parent::__construct();
+        parent::__construct($request);
     }
 
     public function show_planning()
     {
 
-        $days_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        $days_order = ReservationUtils::get_days_order();
         // $start_hour = 8;
         // $end_hour = 19;
         [$start_hour, $end_hour] = ReservationUtils::get_planning_hours();
@@ -31,13 +30,7 @@ class ReservationController extends Controller
             $slots[$hour] = "$hour - " . $hour + 1 . "h";
         }
 
-        $today = new DateTime();
-        $today_day = $today->format('N');
-        $monday = $today->modify("-" . ($today_day - 1) . " days");
-
-        foreach ($days_order as $i => $day) {
-            $days[$day] = (clone $monday)->modify("+ $i days");
-        }
+        $days = ReservationUtils::get_week_dates();
 
         $planning = [];
         foreach ($days_order as $day) {
@@ -45,9 +38,9 @@ class ReservationController extends Controller
                 $planning[$day][$slot] = null;
             }
         }
-        echo '<pre>';
-        var_dump($planning);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($planning);
+        // echo '</pre>';
         $reservations = Reservation::get_week_reservation();
         foreach ($reservations as $reservation) {
             // $start_date = new DateTime($reservation->start);
@@ -62,30 +55,32 @@ class ReservationController extends Controller
                 $planning[$day][$hour] = $reservation;
             }
         }
-        echo '<pre>';
-        var_dump($planning);
-        echo '</pre>';
+        // echo '<pre>';
+        // var_dump($planning);
+        // echo '</pre>';
 
-        $this->render_with_layout('reservation/planning', [
+        $response = $this->render_with_layout('reservation/planning', [
             'days' => $days,
             'slots' => $slots,
             'planning' => $planning
         ]);
+        // var_dump($response->get_body());
+        return $response;
     }
 
-    public function reserve(Request $request)
+    public function reserve()
     {
         $errors = [];
         [$start_hour, $end_hour] = ReservationUtils::get_planning_hours();
 
-        if ($request->method === 'POST') {
-            $start = (int)$request->post['start'];
-            $end = (int)$request->post['end'];
-            $start_date = (new DateTime($request->post['date']))->setTime($start, 0);
-            $end_date = (new DateTime($request->post['date']))->setTime($end, 0);
+        if ($this->request->method === 'POST') {
+            $start = (int)$this->request->post['start'];
+            $end = (int)$this->request->post['end'];
+            $start_date = (new DateTime($this->request->post['date']))->setTime($start, 0);
+            $end_date = (new DateTime($this->request->post['date']))->setTime($end, 0);
             $reservation = new Reservation();
-            $reservation->title = $request->post['title'];
-            $reservation->description = $request->post['description'];
+            $reservation->title = $this->request->post['title'];
+            $reservation->description = $this->request->post['description'];
             $reservation->start = $start_date;
             $reservation->end = $end_date;
             $reservation->user_id = SessionManager::get_user_id();
@@ -95,10 +90,10 @@ class ReservationController extends Controller
                 $errors['date'] = "Le créneau n'est pas disponible.";
             }
         }
-        $this->render_with_layout('reservation/reserve-form', [
+        return $this->render_with_layout('reservation/reserve-form', [
             'start_hour' => $start_hour,
             'end_hour' => $end_hour,
-            'form' => $request->post,
+            'form' => $this->request->post,
             'errors' => $errors
         ]);
     }

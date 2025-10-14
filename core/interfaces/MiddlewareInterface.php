@@ -2,9 +2,11 @@
 
 namespace Core\Interfaces;
 
-use Core\Request;
+use Closure;
+use Core\Http\Request;
+use Core\Http\Response;
 
 interface MiddlewareInterface
 {
-    public function __invoke(Request $request);
+    public function __invoke(Request $request, Closure $next): Response;
 }

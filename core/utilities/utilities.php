@@ -38,3 +38,10 @@ function int_validation(string $nb, ?int $min = null, ?int $max = null): bool
 
     return true;
 }
+
+function load_view(string $path)
+{
+    ob_start();
+    include VIEW_PATH . "/$path.php";
+    return ob_get_clean();
+}
