@@ -20,7 +20,8 @@
                 <a href="<?php echo BASE_URL . '/'; ?>" title="retour à l'accueil">Accueil</a>
             </div>
             <ul class="nav-menu">
-                <li><a href="<?php echo url('guest_book'); ?>">Livre d'or</a></li>
+                <li><a href="<?php echo url('planning'); ?>">Planning</a></li>
+                <li><a href="<?php echo url('reserve'); ?>">Réserver</a></li>
                 <?php if (Core\SessionManager::is_logged()): ?>
                     <li><a href="<?php echo url('profile/update'); ?>">Profil</a></li>
                     <li><a href="<?php echo url('logout'); ?>">Déconnexion</a></li>

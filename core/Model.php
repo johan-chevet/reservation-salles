@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use DateTime;
+
 class Model
 {
     protected static string $table_name;
@@ -27,6 +29,15 @@ class Model
     {
         // Get all properties from child class
         $data = get_object_vars($this);
+
+        // transform Datetime object to string
+        foreach ($data as &$value) {
+            if ($value instanceof DateTime) {
+                $value = $value->format("Y-m-d H:i:s");
+                var_dump($value);
+            }
+        }
+
         // Filter class properties that are objects
         $data = array_filter($data, fn($val) => !is_object($val));
 

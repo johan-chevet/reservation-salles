@@ -18,8 +18,9 @@
         <div class="form-col">
             <label for="start">Heure de début</label>
             <select class="form-input" name="start" id="start">
-                <option value="9">9H</option>
-                <option value="10">10H</option>
+                <?php for ($hour = $start_hour; $hour < $end_hour; $hour++): ?>
+                    <option value="<?= $hour ?>"><?= $hour . 'h' ?></option>
+                <?php endfor ?>
             </select>
             <p class="form-error"><?= $errors["start"] ?? '' ?></p>
         </div>
@@ -28,8 +29,9 @@
         <div class="form-col">
             <label for="end">Heure de fin</label>
             <select class="form-input" name="end" id="end">
-                <option value="9">9H</option>
-                <option value="10">10H</option>
+                <?php for ($hour = $start_hour + 1; $hour < $end_hour + 1; $hour++): ?>
+                    <option value="<?= $hour ?>"><?= $hour . 'h' ?></option>
+                <?php endfor ?>
             </select>
             <p class="form-error"><?= $errors["end"] ?? '' ?></p>
         </div>

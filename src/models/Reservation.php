@@ -5,14 +5,17 @@ namespace Src\Models;
 use Core\Database;
 use Core\Model;
 use DateTime;
+use Src\Utils\ReservationUtils;
 
 class Reservation extends Model
 {
     public string $title;
     public string $description;
     public int $user_id;
-    public string $start;
-    public string $end;
+    // public string $start;
+    // public string $end;
+    public DateTime $start;
+    public DateTime $end;
 
     public ?User $user;
 
@@ -39,8 +42,8 @@ class Reservation extends Model
             $comment->id = $row['id'];
             $comment->title = $row['title'];
             $comment->description = $row['description'];
-            $comment->start = $row['start'];
-            $comment->end = $row['end'];
+            $comment->start =  new DateTime($row['start']);
+            $comment->end = new DateTime($row['end']);
             $comment->user_id = $row['user_id'];
 
             $user = new User();
@@ -52,5 +55,17 @@ class Reservation extends Model
             $reservations[] = $comment;
         }
         return $reservations;
+    }
+
+    public static function is_slot_taken(DateTime $start_date, DateTime $end_date)
+    {
+        $sql = "SELECT id FROM reservations WHERE start >= ? AND end <= ?";
+        $stmt = Database::pdo()->prepare($sql);
+        $stmt->execute([
+            $start_date->format(ReservationUtils::DATE_FORMAT),
+            $end_date->format(ReservationUtils::DATE_FORMAT)
+        ]);
+        $res = $stmt->fetchAll();
+        return !empty($res);
     }
 }
