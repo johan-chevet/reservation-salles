@@ -28,8 +28,8 @@ class Reservation extends Model
     {
         //TODO get start date of current week
         $days = ReservationUtils::get_week_dates();
-        $monday = $days['Mon']->format(ReservationUtils::DATE_FORMAT);
-        $sunday = $days['Sun']->format(ReservationUtils::DATE_FORMAT);
+        $monday = $days['Mon']->setTime(9, 0)->format(ReservationUtils::DATE_FORMAT);
+        $sunday = $days['Sun']->setTime(19, 0)->format(ReservationUtils::DATE_FORMAT);
         $sql = "
             SELECT r.*, u.login 
             FROM reservations AS r 
@@ -63,11 +63,11 @@ class Reservation extends Model
 
     public static function is_slot_taken(DateTime $start_date, DateTime $end_date)
     {
-        $sql = "SELECT id FROM reservations WHERE start >= ? AND end <= ?";
+        $sql = "SELECT id FROM reservations WHERE start < ? AND end > ?";
         $stmt = Database::pdo()->prepare($sql);
         $stmt->execute([
-            $start_date->format(ReservationUtils::DATE_FORMAT),
-            $end_date->format(ReservationUtils::DATE_FORMAT)
+            $end_date->format(ReservationUtils::DATE_FORMAT),
+            $start_date->format(ReservationUtils::DATE_FORMAT)
         ]);
         $res = $stmt->fetchAll();
         return !empty($res);

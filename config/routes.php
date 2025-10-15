@@ -7,7 +7,6 @@ use Src\Controllers\ReservationController;
 use Src\Middlewares\GuestMiddleware;
 use Src\Middlewares\LoggedInMiddleware;
 
-//TODO guards
 const ROUTES = [
     '/' => [
         'controller' => HomeController::class,

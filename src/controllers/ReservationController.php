@@ -84,10 +84,17 @@ class ReservationController extends Controller
             $reservation->start = $start_date;
             $reservation->end = $end_date;
             $reservation->user_id = SessionManager::get_user_id();
-            if (!Reservation::is_slot_taken($start_date, $end_date)) {
-                $reservation->save();
-            } else {
+            if (Reservation::is_slot_taken($start_date, $end_date)) {
                 $errors['date'] = "Le créneau n'est pas disponible.";
+            }
+
+            $day = $start_date->format('D');
+            if ($day === 'Sat' || $day === 'Sun') {
+                $errors['date'] = 'Impossible de réserver le week-end';
+            }
+
+            if (empty($errors)) {
+                $reservation->save();
             }
         }
         return $this->render_with_layout('reservation/reserve-form', [

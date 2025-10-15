@@ -9,14 +9,14 @@
     </div>
     <div class="form-row">
         <div class="form-col">
-            <label for="password">Password</label>
+            <label for="password">Nouveau mot de passe</label>
             <input class="form-input" type="password" name="password" id="password" value=<?= $form['password'] ?? '' ?>>
             <p class="form-error"><?= $errors["password"] ?? '' ?></p>
         </div>
     </div>
     <div class="form-row">
         <div class="form-col">
-            <label for="password-confirmation">Password confirmation</label>
+            <label for="password-confirmation">Confirmation</label>
             <input class="form-input" type="password" name="password-confirmation" id="password-confirmation" value=<?= $form['password-confirmation'] ?? '' ?>>
             <p class="form-error"><?= $errors["password-confirmation"] ?? '' ?></p>
         </div>
