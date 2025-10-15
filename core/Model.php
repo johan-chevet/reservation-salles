@@ -9,13 +9,6 @@ class Model
     protected static string $table_name;
     public ?int $id;
 
-    public function __construct()
-    {
-        // if (empty(static::$table_name)) {
-        //     static::$table_name = strtolower(basename(get_class($this))) . 's';
-        // }
-    }
-
     protected static function get_table_name(): string
     {
         if (empty(static::$table_name)) {

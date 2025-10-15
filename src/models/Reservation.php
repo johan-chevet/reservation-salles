@@ -19,11 +19,6 @@ class Reservation extends Model
 
     public ?User $user;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public static function get_week_reservation()
     {
         //TODO get start date of current week

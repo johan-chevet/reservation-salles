@@ -11,11 +11,6 @@ class User extends Model
     // If table name is not equal to the class name + s, define it below
     // protected static string $table_name = "users";
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public string $login;
     public string $password;
 

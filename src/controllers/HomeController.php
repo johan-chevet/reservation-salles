@@ -4,6 +4,7 @@ namespace Src\Controllers;
 
 use Core\Controller;
 use Core\Http\Request;
+use Core\Validator;
 
 class HomeController extends Controller
 {
@@ -14,6 +15,23 @@ class HomeController extends Controller
 
     public function index()
     {
+        $form = [
+            'id' => 3,
+            'name' => 'bla',
+        ];
+        // var_dump(is_int($form['id']));
+        // var_dump($form);
+        $validator = new Validator($form);
+        $validator
+            ->add('id')
+            ->required()
+            ->is_int()
+            ->greater_than(2)
+            ->add('name')
+            ->min_length(5)
+            ->max_length(7)
+            ->validate();
+        var_dump($validator->get_errors());
         return $this->render_with_layout('home/index');
     }
 }

@@ -1,15 +1,5 @@
 <?php
 
-function redirect(string $path, int $code = 301)
-{
-    http_response_code($code);
-    if ($path === '/') {
-        $path = '';
-    }
-    header("Location: " . BASE_URL . "/$path");
-    exit;
-}
-
 /**
  * Génère une URL absolue
  */

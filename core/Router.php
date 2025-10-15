@@ -65,7 +65,7 @@ class Router
         return [$route, $params];
     }
 
-    public function dispatch()
+    public function dispatch(): Response
     {
         [$route, $params] = $this->parse_url();
 
@@ -79,17 +79,13 @@ class Router
         $controller = new $route['controller']($this->request);
         $method = $route['method'];
 
-        $controller_function = function ($request) use ($controller, $method, $params) {
-            return call_user_func_array([$controller, $method], $params);
-        };
+        $controller_function = fn($request): Response => $controller->$method($params);
 
         $middlewares = array_reverse($route['middleware'] ?? []);
         $next = $controller_function;
 
         foreach ($middlewares as $middleware) {
-            $next = function ($request) use ($middleware, $next) {
-                return $middleware($request, $next);
-            };
+            $next = fn($request): Response => $middleware($request, $next);
         }
 
         return $next($this->request);

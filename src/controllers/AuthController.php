@@ -42,7 +42,7 @@ class AuthController extends Controller
                     $user->login = $this->request->post['login'];
                     $user->password = password_hash($this->request->post['password'], PASSWORD_BCRYPT);
                     $user->save();
-                    redirect('/login');
+                    return (new Response)->redirect('/login', 201);
                 }
                 $errors['login'] = "Nom de login indisponible";
             }
@@ -67,7 +67,7 @@ class AuthController extends Controller
                 $user = User::find_by_login($login);
                 if ($user && password_verify($password, $user->password)) {
                     SessionManager::setUser($user);
-                    redirect('/');
+                    return (new Response)->redirect('/login');
                 }
                 $errors['password'] = "Login ou mot de passe incorrect";
             }

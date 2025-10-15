@@ -21,7 +21,7 @@
             </div>
             <ul class="nav-menu">
                 <li><a href="<?php echo url('planning'); ?>">Planning</a></li>
-                <li><a href="<?php echo url('reserve'); ?>">Réserver</a></li>
+                <li><a href="<?php echo url('reservation'); ?>">Réserver</a></li>
                 <?php if (Core\SessionManager::is_logged()): ?>
                     <li><a href="<?php echo url('profile/update'); ?>">Profil</a></li>
                     <li><a href="<?php echo url('logout'); ?>">Déconnexion</a></li>

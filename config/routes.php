@@ -36,7 +36,7 @@ const ROUTES = [
         'controller' => ReservationController::class,
         'method' => 'show_planning'
     ],
-    'reserve' => [
+    'reservation' => [
         'controller' => ReservationController::class,
         'method' => 'reserve'
     ]
