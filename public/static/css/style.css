@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: black;
+  text-decoration: none;
+  list-style: none;
 }
 
 :root {
@@ -12,6 +15,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 2rem;
   margin: 3rem 1rem 3rem 1rem;
 }
@@ -29,6 +33,10 @@ table {
 }
 
 td {
+  border: 2px solid black;
+}
+
+td:not(.reserved) {
   border: 2px solid black;
   padding: 1rem;
 }
@@ -128,10 +136,27 @@ table th {
   background-color: rgb(38, 100, 33);
 }
 
+.reserved a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+}
+
 .week-end-slot {
   background-color: rgb(152, 4, 4);
 }
 
 .slot-title {
   font-size: 1.1rem;
+}
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: rgb(174, 174, 174);
 }

@@ -16,8 +16,10 @@
                         <?php $reservation = $planning[$key][$hour]; ?>
                         <?php if ($reservation): ?>
                             <td class="reserved">
-                                <div class="slot-title"><?= htmlspecialchars($reservation->title) ?></div>
-                                <div class="slot-user"><?= "Réserver par " .  htmlspecialchars($reservation->user->login) ?></div>
+                                <a href="<?= url("reservation/") . $reservation->id ?>">
+                                    <div class="slot-title"><?= htmlspecialchars($reservation->title) ?></div>
+                                    <div class="slot-user"><?= "Réserver par " .  htmlspecialchars($reservation->user->login) ?></div>
+                                </a>
                             </td>
                         <?php elseif ($key === 'Sat' || $key === 'Sun'): ?>
                             <td class="week-end-slot"></td>

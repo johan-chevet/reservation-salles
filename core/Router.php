@@ -45,11 +45,14 @@ class Router
                 if ($this->is_param($path_splited[$i])) {
 
                     $param = explode(':', trim($path_splited[$i], '{}'));
-                    if (count($param) == 2 && $param[1] === 'int' && !int_validation($url_part)) {
-                        $match_found = false;
-                        break;
+                    if (count($param) == 2 && $param[1] === 'int') {
+                        if (int_validation($url_part)) {
+                            $url_part = (int)$url_part;
+                        } else {
+                            $match_found = false;
+                            break;
+                        }
                     }
-
                     $params[] = $url_part;
                 } else if ($url_part !== $path_splited[$i]) {
                     $match_found = false;
@@ -79,9 +82,9 @@ class Router
         $controller = new $route['controller']($this->request);
         $method = $route['method'];
 
-        $controller_function = fn($request): Response => $controller->$method($params);
+        $controller_function = fn($request): Response => $controller->$method(...$params);
 
-        $middlewares = array_reverse($route['middleware'] ?? []);
+        $middlewares = array_reverse($route['middlewares'] ?? []);
         $next = $controller_function;
 
         foreach ($middlewares as $middleware) {

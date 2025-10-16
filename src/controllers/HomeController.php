@@ -17,19 +17,18 @@ class HomeController extends Controller
     {
         $form = [
             'id' => 3,
-            'name' => 'bla',
+            'name' => '   d',
         ];
         // var_dump(is_int($form['id']));
         // var_dump($form);
         $validator = new Validator($form);
         $validator
-            ->add('id')
-            ->required()
-            ->is_int()
-            ->greater_than(2)
+            // ->add('id')
+            // ->required()
+            // ->is_int()
+            // ->greater_than(2)
             ->add('name')
-            ->min_length(5)
-            ->max_length(7)
+            ->required()
             ->validate();
         var_dump($validator->get_errors());
         return $this->render_with_layout('home/index');

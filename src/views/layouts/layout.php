@@ -32,7 +32,9 @@
             </ul>
         </nav>
     </header>
-    <?= $content ?? '' ?>
+    <main>
+        <?= $content ?? '' ?>
+    </main>
 </body>
 
 </html>

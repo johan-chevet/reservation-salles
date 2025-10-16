@@ -38,6 +38,12 @@ const ROUTES = [
     ],
     'reservation' => [
         'controller' => ReservationController::class,
-        'method' => 'reserve'
+        'method' => 'reserve',
+        'middlewares' => [new LoggedInMiddleware()]
+    ],
+    'reservation/{id:int}' => [
+        'controller' => ReservationController::class,
+        'method' => 'details',
+        'middlewares' => [new LoggedInMiddleware()]
     ]
 ];
